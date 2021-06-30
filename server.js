@@ -41,14 +41,19 @@ app.post('/logs',(req,res)=>{
   if(req.body.shipIsBroken ==='on') req.body.shipIsBroken = true;
   else req.body.shipIsBroken = false;
   Log.create(req.body,(err,createdFruit)=>{
-    if(err) res.status(404).send({msg:err.message})
+    if(err) res.status(404).send({msg: err.message})
     else res.redirect('/logs')
   })
 })
 //edit
 
 //show
-
+app.get('/logs/:id', (req,res)=>{
+  Log.findById(req.params.id,(err,foundLog)=>{
+    if(err) res.status(404).send({msg:err.message})
+    else res.render('Show', {log:foundLog})
+  })
+})
 
 app.listen(PORT,()=>{
   console.log('listening on port ', PORT);
