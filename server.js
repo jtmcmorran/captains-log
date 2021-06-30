@@ -42,7 +42,15 @@ app.delete('/logs/:id', (req,res)=>{
   })
 })
 //update
-
+app.put('/logs/:id',(req,res)=>{
+  req.body.shipIsBroken === 'on'
+    ? req.body.shipIsBroken = true
+    : req.body.shipIsBroken = false
+  Log.findByIdAndUpdate(req.params.id, req.body, {new: true}, (err, updatedLog)=>{
+    if(err) res.status(404).send({msg: err.message})
+    else res.redirect('/logs')
+  })
+})
 //create
 app.post('/logs',(req,res)=>{
   if(req.body.shipIsBroken ==='on') req.body.shipIsBroken = true;
@@ -53,7 +61,12 @@ app.post('/logs',(req,res)=>{
   })
 })
 //edit
-
+app.get('/logs/edit/:id',(req,res)=>{
+  Log.findById(req.params.id,(err,foundLog)=>{
+    if(err) res.status(404).send({msg:err.message})
+    else res.render('Edit', {log:foundLog})
+  })
+})
 //show
 app.get('/logs/:id', (req,res)=>{
   Log.findById(req.params.id,(err,foundLog)=>{
